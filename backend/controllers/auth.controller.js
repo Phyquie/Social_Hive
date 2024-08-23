@@ -5,7 +5,8 @@ export const signup = async (req, res) => {
  try{
     const{fullname, username, email, password} = req.body;
 
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
     if(!emailRegex.test(email)){
         return res.status(400).send({message: "Invalid email Format"});
     }
@@ -34,7 +35,7 @@ export const signup = async (req, res) => {
     if(newUser){
         generateTokenAndSetCookie(newUser._id, res);
         await newUser.save();
-        res.status(201).json({__id:newUser._id,
+        res.status(201).json({_id:newUser._id,
              username:newUser.username, email:newUser.email, 
             fullname:newUser.fullname,
             profileImg:newUser.profileImg,
@@ -62,9 +63,9 @@ export const login = async (req, res) => {
         const user = await User.findOne({username});
         const isPasswordValid = user && await bcrypt.compare(password, user.password);
 if(!user || !isPasswordValid){
-    return res.status(400).send({message: "Invalid credentials"});}
+    return res.status(400).send({message: "Username or Password is worng"});}
     generateTokenAndSetCookie(user._id, res);
-    res.status(200).json({__id:user._id,
+    res.status(200).json({_id:user._id,
         username:user.username, email:user.email, 
        fullname:user.fullname,
        profileImg:user.profileImg,

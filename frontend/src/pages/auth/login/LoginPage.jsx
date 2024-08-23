@@ -1,8 +1,10 @@
 import React from 'react'
 import { FaUser } from 'react-icons/fa';
-import { MdOutlineMail, MdDriveFileRenameOutline, MdPassword } from 'react-icons/md';
+import { MdPassword } from 'react-icons/md';
 import BeeLogoSvg from '../../../components/svgs/Dsvg';
 import { useState } from 'react';
+import { useMutation ,useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 const LoginPage = () => {
 
@@ -10,17 +12,46 @@ const LoginPage = () => {
 		username: "",
 		password: "",
 	});
+   const queryClient = useQueryClient();
+  const { mutate, isError, isLoading,error} = useMutation({
+    mutationFn: async (formData) => {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData),
+      });
 
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Something went wrong');
+      }
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success('Login successful!');
+      setFormData({ 
+        username: '',
+        password: ''
+      })
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      
+
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
   const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(formData);
+		mutate(formData);
 	};
 
 	const handleInputChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const isError = false;
   return (
     <div className="min-h-screen flex flex-col items-center md:flex-row ">
       {/* Logo Box */}
@@ -65,9 +96,9 @@ const LoginPage = () => {
 
           {/* Sign Up Button */}
           <button className="w-full  text-primary font-bold p-3 rounded-lg mt-4 hover:bg-secondary transition">
-            Sign In
+            {isLoading?"Loading..." : "Sign In"}
           </button>
-          {isError && <p className='text-red-500'>Something went wrong</p>}
+          {isError && <p className='text-red-500'>{error.message}</p>}
         </form>
 
         {/* Already have an account */}
