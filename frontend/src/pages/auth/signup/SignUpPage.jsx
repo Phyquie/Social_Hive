@@ -54,7 +54,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center md:flex-row">
+    <div className="min-h-screen flex flex-col items-center md:flex-row max-w-full max-h-full">
       {/* Logo Box */}
       <div className="logobox flex flex-col w-full md:w-1/2 h-64 md:h-screen text-center p-8 justify-center items-center">
         <BeeLogoSvg width="600px" height="600px" />

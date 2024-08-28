@@ -47,7 +47,7 @@ function App() {
  }
 
   return (
-    <><div className='flex justify-center'>
+    <><div className='flex justify-center overflow-auto'>
      {authUser && <Sidebar/>} 
    <Routes>
     <Route path="/" element={authUser ? <HomePage /> : <Navigate to='/login' />}  />

@@ -23,7 +23,7 @@ const RightPanel = () => {
 			}
 		},
 	});
-	if (suggestedUsers?.length === 0) return <div className='md:w-64 w-0'></div>;
+	
 
 
 	const { mutate: follow, isPending } = useMutation({
@@ -52,6 +52,9 @@ const RightPanel = () => {
 			toast.error(error.message);
 		},
 	});
+
+
+	if (suggestedUsers?.length === 0) return <div className='md:w-64 w-0'></div>;
 
 
 	return (
