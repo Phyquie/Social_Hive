@@ -63,7 +63,7 @@ export const getSuggestedUsers = async (req, res) => {
             }
         },{
             $sample:{
-                size:10
+                size:5
             }
         }]);
 

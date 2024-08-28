@@ -23,7 +23,7 @@ function App() {
         if(!res.ok){
           throw new Error(data.error||"Something went worng")
         }
-        console.log("authUser is here",data)
+        
         return data;
       }
       catch(error){

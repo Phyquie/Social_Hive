@@ -16,6 +16,7 @@ api_secret: process.env.CLOUDINARY_API_SECRET,
 
 const app = express();
 const Port = process.env.Port;
+app.use(express.json({limit:"500kb"}));
 app.use(express.json());//to parse req.body
 app.use(express.urlencoded({extended:true}));//to parse form data'
 app.use(cookieParser());
