@@ -47,20 +47,46 @@ function App() {
  }
 
   return (
-    <><div className='flex justify-center overflow-auto'>
-     {authUser && <Sidebar/>} 
-   <Routes>
-    <Route path="/" element={authUser ? <HomePage /> : <Navigate to='/login' />}  />
-    <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to='/' />}/>
-    <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to='/' />} />
-    <Route path="/notifications"  element={authUser ? <NotificationPage /> : <Navigate to='/login' />} />
-    <Route path="/profile/:username" element={authUser ? <ProfilePage /> : <Navigate to='/login' />}  />
-   
-   
-</Routes>
-{authUser && <RightPanel/>} 
-<Toaster/>
+    <><div className="flex h-screen">
+    {authUser && (
+      <div className="fixed top-0 left-0 w-1/5 h-full">
+        <Sidebar />
+      </div>
+    )}
+    <div className={`flex-grow ${authUser ? 'ml-[20%] lg:mr-[20%]' : ''} overflow-auto`}>
+      <Routes>
+        <Route
+          path="/"
+          element={authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/signup"
+          element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/login"
+          element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/notifications"
+          element={authUser ? <NotificationPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/profile/:username"
+          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+        />
+      </Routes>
     </div>
+    {authUser && (
+      <div className="fixed top-0 right-0 w-1/5 h-full hidden lg:block">
+        <RightPanel />
+      </div>
+    )}
+    <Toaster />
+  </div>
+  
+  
+  
     
   </>
   )
