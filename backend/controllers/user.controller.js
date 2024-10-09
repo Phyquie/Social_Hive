@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import Notification from "../models/notification.model.js";
 import bcrypt from "bcryptjs/dist/bcrypt.js";
 import { v2 as cloudinary } from "cloudinary";
+import mongoose from "mongoose";
 export const getUserProfile = async (req, res) => {
     const{username} = req.params;
 
@@ -136,3 +137,24 @@ catch(error){
     res.status(500).send({error: "Internal server error"});
     console.log(error.message);
 }}
+
+export const getUsersForSidebar = async (req, res) => {
+    try {
+      const loggedInUserId = req.user._id;
+      console.log("loggedInUserId: ", loggedInUserId);
+  
+     
+  
+      // Query to find users who are followed by and follow the logged-in user
+      const filteredUsers = await User.find({
+        _id: { $ne: loggedInUserId }, // Exclude the logged-in user
+        followers: { $in: [loggedInUserId] }, // Check if they follow the logged-in user
+        following: { $in: [loggedInUserId] } // Check if the logged-in user follows them
+      }).select("-password"); // Exclude the password field from the results
+  
+      res.status(200).json(filteredUsers);
+    } catch (error) {
+      console.error("Error in getUsersForSidebar: ", error.message);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };

@@ -5,6 +5,7 @@ import { IoNotifications } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
+import { TbMessageFilled } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { useMutation ,useQuery,useQueryClient } from "@tanstack/react-query";
 
@@ -44,11 +45,11 @@ const Sidebar = () => {
     
 	return (
 		<div className='md:flex-[2_2_0] w-18 max-w-52'>
-			<div className='sticky top-0 left-0 h-screen flex flex-col border-r border-gray-700 w-20 md:w-full'>
+			<div className='sticky top-0 left-0 h-screen flex flex-col border-r border-gray-700 w-20 md:w-full ' >
 				<Link to='/' className='flex justify-center md:justify-start'>
 					<BeeLogoSvg className='px-2 w-20 h-20 rounded-full fill-white hover:bg-stone-900' />
 				</Link>
-				<ul className='flex flex-col gap-3 mt-4'>
+				<ul className='flex flex-col gap-3 mt-4  '>
 					<li className='flex justify-center md:justify-start'>
 						<Link
 							to='/'
@@ -77,6 +78,16 @@ const Sidebar = () => {
 							<span className='text-2xl font-extrabold  hidden md:block'>Profile</span>
 						</Link>
 					</li>
+					<li className='flex justify-center md:justify-start'>
+						<Link
+							to={`/messages`}
+							className='flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer'
+						>
+							<TbMessageFilled className='w-6 h-6 fill-primary' />
+							<span className='text-2xl font-extrabold  hidden md:block'>Messages</span>
+						</Link>
+					</li>
+
 				</ul>
 				{data && (
 					<Link
