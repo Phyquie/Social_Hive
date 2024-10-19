@@ -9,7 +9,7 @@ const ChatWindow = ({ userID }) => {
   const { selectedConversation: client } = useConversation();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const encryptionKey = import.meta.env.VITE_ENCRYPTION_KEY;
+  const [encryptionKey] = useState(import.meta.env.VITE_ENCRYPTION_KEY);
   const navigate = useNavigate();
 
   const encryptMessage = (message) => {
