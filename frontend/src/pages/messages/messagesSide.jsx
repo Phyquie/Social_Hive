@@ -1,7 +1,7 @@
 import React from 'react';
 import ConversationSkeleton from '../../components/skeletons/ConversationSkeleton';
 import { useQuery } from '@tanstack/react-query';
-import MessageSidebar from './MessageSide';
+
 
 const MessagesPage = () => {
   const { data, isLoading } = useQuery({
