@@ -6,14 +6,13 @@ import LoginPage from './pages/auth/login/LoginPage'
 import RightPanel from './components/common/RightPanel'
 import NotificationPage from './pages/notification/NotificationPage';
 import ProfilePage from './pages/profile/ProfilePage'
-import MessageContainer from './pages/messages/chatContainer'
 import Sidebar from './components/common/Sidebar'
 import { Toaster } from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
 import LoadingSpinner from './components/common/LoadingSpinner'
 import MessagesPage from './pages/messages/messagesSide'
-
-
+import ChatWindow from './pages/messages/ChatWindow'
+import SearchPage from './pages/searchPage/SearchPage'
 
 function App() {
  const{data : authUser,isLoading} =useQuery({
@@ -49,13 +48,13 @@ function App() {
  }
 
   return (
-    <><div className="flex h-screen">
+    <><div className="flex h-screen lg:flex-row flex-col-reverse">
     {authUser && (
-      <div className="fixed top-0 left-0 w-1/5 h-full ">
+      <div className="lg:sticky lg:top-0 left-0 lg:w-1/5 lg:h-full h-20 bottom-0 w-full ">
         <Sidebar />
       </div>
     )}
-    <div className={`flex-grow ${authUser ? 'ml-[20%] lg:mr-[20%]' : ''} overflow-auto`}>
+    <div className={`flex-grow ${authUser ? '' : ''} overflow-auto`}>
       <Routes>
         <Route
           path="/"
@@ -79,15 +78,16 @@ function App() {
         />
         <Route 
            path="/messages"
-           element={authUser ? <MessagesPage /> : <Navigate to="/login" />}/>
+           element={authUser ? <MessagesPage/>: <Navigate to="/login" />}/>
       
       <Route 
            path="/messages/chat"
-           element={authUser ? <MessageContainer/> : <Navigate to="/login" />}/>
+           element={authUser ? <ChatWindow userID={authUser._id} /> : <Navigate to="/login" />}/>
+           <Route path="/search" element={authUser ? <SearchPage/> : <Navigate to="/login" />}/>
       </Routes>
     </div>
     {authUser && (
-      <div className="fixed top-0 right-0 w-1/5 h-full hidden lg:block">
+      <div className="sticky top-0 right-0 w-1/5 h-full hidden lg:block">
         <RightPanel />
       </div>
     )}

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
 const Post = ({ post }) => {
   const [comment, setComment] = useState("");
@@ -18,6 +19,7 @@ const Post = ({ post }) => {
  
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   const dateOnly = new Date(post.createdAt).toLocaleDateString(undefined, options);
+  const navigate = useNavigate();
   
 
   const { mutate: Delete } = useMutation({
@@ -187,7 +189,7 @@ const Post = ({ post }) => {
                       </p>
                     )}
                     {post.comments.map((comment) => (
-                      <div key={comment._id} className="flex gap-3 items-start">
+                      <div key={comment._id} className="flex gap-3 items-start" onClick={() => navigate(`/profile/${comment.user.username}`)}>
                         <div className="avatar">
                           <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-700">
                             <img src={comment.user.profileImg || "/avatar-placeholder.png"} alt="Commenter" />
@@ -195,7 +197,7 @@ const Post = ({ post }) => {
                         </div>
                         <div className="flex flex-col">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-white">{comment.user.fullName}</span>
+                            <span className="font-bold text-white">{comment.user.fullname}</span>
                             <span className="text-gray-500 text-sm">@{comment.user.username}</span>
                           </div>
                           <div className="text-sm text-gray-300">{comment.text}</div>

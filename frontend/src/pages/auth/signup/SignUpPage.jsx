@@ -4,6 +4,7 @@ import { FaUser } from 'react-icons/fa';
 import BeeLogoSvg from '../../../components/svgs/Dsvg';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { CometChat } from "@cometchat-pro/chat"; // Import CometChat SDK
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({ 
@@ -13,6 +14,25 @@ const SignUpPage = () => {
     password: ''
   });
 
+
+  const createCometChatUser = (user) => {
+    const apiKey = 'ee5c05ef7b506f4a93d3d2efbf514f900d2fb31c'; // Replace with your CometChat Auth Key
+    const cometChatUser = new CometChat.User(user._id); // Use unique user ID from your backend
+    cometChatUser.setName(user.fullname); // Set user name
+
+    // Call the createUser function
+    CometChat.createUser(cometChatUser, apiKey).then(
+      (createdUser) => {
+        console.log('CometChat user created successfully:', createdUser);
+      },
+      (error) => {
+        console.error('Error creating CometChat user:', error);
+        toast.error('Failed to create CometChat user');
+      }
+    );
+  };
+
+  // Sign up mutation to create a user in your backend
   const { mutate, isError, isLoading, error } = useMutation({
     mutationFn: async (formData) => {
       const res = await fetch("/api/auth/signup", {
@@ -31,18 +51,22 @@ const SignUpPage = () => {
     },
     onSuccess: (data) => {
       toast.success('Sign up successful!');
+      // Call the function to create a CometChat user
+      createCometChatUser(data);
+
       setFormData({ 
         email: '',
         username: '',
         fullname: '',
         password: ''
-      })
-      console.log(data);
+      });
     },
     onError: (error) => {
       toast.error(error.message);
     }
   });
+
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -50,7 +74,7 @@ const SignUpPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate(formData);
+    mutate(formData); // Call the signup mutation
   };
 
   return (

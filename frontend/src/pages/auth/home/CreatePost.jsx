@@ -2,32 +2,36 @@ import { CiImageOn } from "react-icons/ci";
 import { BsEmojiSmileFill } from "react-icons/bs";
 import { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { useMutation, useQuery , useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import EmojiPicker from 'emoji-picker-react'; // Import the emoji picker
+import { Theme } from "emoji-picker-react";
+
+
 const CreatePost = () => {
 	const [text, setText] = useState("");
 	const [img, setImg] = useState(null);
+	const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State to toggle emoji picker
 
 	const imgRef = useRef(null);
-	const {data:authUser}= useQuery({queryKey:['authUser']});
+	const { data: authUser } = useQuery({ queryKey: ['authUser'] });
 	const queryClient = useQueryClient();
-	const {mutate:createPost , isPending,isError}=useMutation({
-		mutationFn: async ({text,img}) => {
+	const { mutate: createPost, isPending, isError } = useMutation({
+		mutationFn: async ({ text, img }) => {
 			try {
 				const res = await fetch(`/api/posts/create`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
-					  },
-					  body: JSON.stringify({text,img}),
+					},
+					body: JSON.stringify({ text, img }),
 				});
 				const data = await res.json();
 
 				if (!res.ok) {
 					throw new Error(data.error || "Something went wrong");
 				}
-				
-				
+
 				return data;
 			} catch (error) {
 				throw new Error(error);
@@ -42,17 +46,10 @@ const CreatePost = () => {
 		},
 	})
 
-
-
-	
-
-	const data = {
-		profileImg: "/avatars/boy1.png",
-	};
-
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		createPost({text,img})}
+		createPost({ text, img })
+	}
 
 	const handleImgChange = (e) => {
 		const file = e.target.files[0];
@@ -65,6 +62,11 @@ const CreatePost = () => {
 		}
 	};
 
+	const onEmojiClick = (emojiData) => {
+		setText(prevText => prevText + emojiData.emoji);
+		setShowEmojiPicker(false); // Close the emoji picker after selecting an emoji
+	};
+
 	return (
 		<div className='flex p-4 items-start gap-4 border-b border-gray-700'>
 			<div className='avatar'>
@@ -74,10 +76,15 @@ const CreatePost = () => {
 			</div>
 			<form className='flex flex-col gap-2 w-full' onSubmit={handleSubmit}>
 				<textarea
-					className='textarea w-full p-0 text-lg resize-none border-none focus:outline-none  border-gray-800'
+					className='textarea w-full p-0 text-lg resize-y border-none focus:outline-none border-gray-800'
 					placeholder='What is happening?!'
 					value={text}
-					onChange={(e) => setText(e.target.value)}
+					onChange={(e) => {
+						setText(e.target.value);
+						e.target.style.height = 'auto'; // Reset the height
+						e.target.style.height = `${e.target.scrollHeight}px`; // Set the height to the scroll height
+					}}
+					rows={1} // Set a minimum number of rows
 				/>
 				{img && (
 					<div className='relative w-72 mx-auto'>
@@ -98,16 +105,35 @@ const CreatePost = () => {
 							className='fill-primary w-6 h-6 cursor-pointer'
 							onClick={() => imgRef.current.click()}
 						/>
-						<BsEmojiSmileFill className='fill-primary w-5 h-5 cursor-pointer' />
+						<BsEmojiSmileFill
+							className='fill-primary w-5 h-5 cursor-pointer'
+							onClick={() => setShowEmojiPicker(!showEmojiPicker)} // Toggle emoji picker
+						/>
 					</div>
-					<input type='file'accept='image/*' hidden ref={imgRef} onChange={handleImgChange} />
+					<input type='file' accept='image/*' hidden ref={imgRef} onChange={handleImgChange} />
 					<button className='btn btn-primary rounded-full btn-sm text-black px-4'>
 						{isPending ? "Posting..." : "Post"}
 					</button>
 				</div>
+				{showEmojiPicker && (
+					<div className=' flex flex-row justify-start'>
+						<EmojiPicker onEmojiClick={onEmojiClick} theme={Theme.DARK} />
+						<div>
+						<button
+							className=' text-white w-5 h-5 cursor-pointer'
+							onClick={() => setShowEmojiPicker(false)}
+						>
+							<IoCloseSharp className="font-extrabold"/>
+						</button>
+						</div>
+						
+					
+					</div>
+				)} {/* Render emoji picker with close button */}
 				{isError && <div className='text-red-500'>Something went wrong</div>}
 			</form>
 		</div>
 	);
 };
+
 export default CreatePost;

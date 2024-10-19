@@ -7,6 +7,8 @@ import { FaHeart } from "react-icons/fa6";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import { MdDelete } from "react-icons/md";
+
 
 const NotificationPage = () => {
 	const queryClient = useQueryClient();
@@ -42,21 +44,14 @@ const NotificationPage = () => {
 	});
 
 	return (
-		<div className='flex-[4_4_0] border-l border-r border-gray-700 min-h-screen'>
+		<div className='flex flex-col border-gray-700'>
 			<div className='flex justify-between items-center p-4 border-b border-gray-700'>
 				<p className='font-bold'>Notifications</p>
 				<div className='dropdown'>
 					<div tabIndex={0} role='button' className='m-1'>
-						<IoSettingsOutline className='w-4' />
+						<MdDelete className='w-5 h-5 hover:text-primary' onClick={deleteNotifications} />
 					</div>
-					<ul
-						tabIndex={0}
-						className='dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52'
-					>
-						<li>
-							<button onClick={deleteNotifications}>Delete all notifications</button>
-						</li>
-					</ul>
+					
 				</div>
 			</div>
 			{isLoading ? (

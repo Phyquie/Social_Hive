@@ -5,13 +5,28 @@ import BeeLogoSvg from '../../../components/svgs/Dsvg';
 import { useState } from 'react';
 import { useMutation ,useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-
+import { CometChat } from '@cometchat-pro/chat';
 const LoginPage = () => {
 
   const [formData, setFormData] = useState({
 		username: "",
 		password: "",
 	});
+
+  const loginWithCometChat = (uid) => {
+    const authKey = 'ee5c05ef7b506f4a93d3d2efbf514f900d2fb31c';
+    
+    CometChat.login(uid, authKey).then(
+      user => {
+        console.log("Login successful with CometChat:", user);
+        toast.success('Logged in with CometChat!');
+      },
+      error => {
+        console.log("CometChat login failed:", error);
+        toast.error('Failed to log in with CometChat.');
+      }
+    );
+  };
    const queryClient = useQueryClient();
   const { mutate, isError, isLoading,error} = useMutation({
     mutationFn: async (formData) => {
@@ -31,6 +46,7 @@ const LoginPage = () => {
     },
     onSuccess: (data) => {
       toast.success('Login successful!');
+      loginWithCometChat(data._id);  
       setFormData({ 
         username: '',
         password: ''

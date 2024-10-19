@@ -10,7 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cometchat-pro/chat": "^3.0.13",
     "@tanstack/react-query": "^5.52.0",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5",
+    "emoji-picker-react": "^4.12.0",
+    "env": "^0.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",

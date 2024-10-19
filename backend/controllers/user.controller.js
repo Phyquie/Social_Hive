@@ -158,3 +158,26 @@ export const getUsersForSidebar = async (req, res) => {
       res.status(500).json({ error: "Internal server error" });
     }
   };
+
+export const searchUsers = async (req, res) => {
+    const { username } = req.params;
+    try {
+        const users = await User.find({
+
+        
+
+            $or: [
+                { username: { $regex: username, $options: "i" } },
+                { fullname: { $regex: username, $options: "i" } }
+            ]
+            
+        })
+        .select("-password")
+        .limit(10);
+
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).send({ error: "Internal server error" });
+        console.log("Error in searchUsers:", error.message);
+    }
+}

@@ -8,7 +8,6 @@ import userRoutes from "./routes/user.routes.js";
 import { v2 } from "cloudinary";
 import postRoutes from "./routes/post.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
-import messageRoutes from "./routes/message.routes.js"; 
 dotenv.config();
 v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -27,7 +26,6 @@ app.use("/api/auth",authRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/posts",postRoutes);
 app.use("/api/notifications",notificationRoutes);
-app.use("/api/messages",messageRoutes);
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static(path.join(__dirname, "/frontend/dist")));
