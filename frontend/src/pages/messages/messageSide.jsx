@@ -21,11 +21,16 @@ const MessageSidebar = ({ user }) => {
       setIsOnline(false); // Set to offline in case of error
     }
   }
-
-  // useEffect to fetch user's online status on component mount or when user._id changes
-  useEffect(() => {
+ // Set up interval to check if user is online every 5 seconds
+ useEffect(() => {
+  const interval = setInterval(() => {
     checkUserOnlineStatus(user._id);
-  }, [user._id]);
+  }, 5000);
+
+  // Clean up the interval on component unmount
+  return () => clearInterval(interval);
+}, [user._id]); // Ensure the effect runs when user._id changes
+
 
   return (
     <div
@@ -55,9 +60,9 @@ const MessageSidebar = ({ user }) => {
         </div>
         {isOnline ? (
           
-          <div className="h-2 w-2 bg-green-500 rounded-full my-2"></div>
+          <div className="h-2 w-2 bg-green-500 rounded-full my-2 animate-pulse"></div>
         ) : (
-          <div className="h-2 w-2 bg-gray-500 rounded-full my-2"></div>
+          <div className="h-2 w-2 bg-gray-500 rounded-full my-2 animate-pulse"></div>
         )}
       </div>
     </div>

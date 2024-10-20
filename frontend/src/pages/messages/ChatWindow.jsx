@@ -10,6 +10,7 @@ const ChatWindow = ({ userID }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [encryptionKey] = useState(import.meta.env.VITE_ENCRYPTION_KEY);
+  const [isOnline, setIsOnline] = useState(false);
   const navigate = useNavigate();
 
   const encryptMessage = (message) => {
@@ -21,7 +22,26 @@ const ChatWindow = ({ userID }) => {
     return bytes.toString(CryptoJS.enc.Utf8);
   };
   
+  // Function to check if user is online
+  async function checkUserOnlineStatus(userId) {
+    try {
+      const fetchedUser = await CometChat.getUser(userId);
+      const onlineStatus = fetchedUser.status === "online";
+      setIsOnline(onlineStatus); // Update state with the online status
+    } catch (error) {
+      console.log("Error fetching user status:", error);
+      setIsOnline(false); // Set to offline in case of error
+    }
+  }
+ // Set up interval to check if user is online every 5 seconds
+ useEffect(() => {
+  const interval = setInterval(() => {
+    checkUserOnlineStatus(client._id);
+  }, 5000);
 
+  // Clean up the interval on component unmount
+  return () => clearInterval(interval);
+}, [client._id]); // Ensure the effect runs when user._id changes
 
   // Function to fetch previous messages between userID and client
   const fetchMessages = () => {
@@ -121,7 +141,7 @@ const ChatWindow = ({ userID }) => {
 
   return (
     <div className="flex flex-col h-screen bg-black shadow-lg ">
-      <div className="flex items-center justify-start gap-4 p-4 bg-primary text-black font-extrabold">
+      <div className="flex items-center justify-start gap-4 p-4 bg-primary text-black font-extrabold sticky top-0 z-10">
         <IoArrowBack className="w-6 h-6 cursor-pointer fill-primary" onClick={() => navigate("/messages")}/>
         <div className="flex items-center gap-2">
         {client.profileImg ? (
@@ -135,6 +155,13 @@ const ChatWindow = ({ userID }) => {
           {client.fullname[0]}
         </div>
       )}        <h2 className="text-lg font-semibold">{client.fullname}</h2>
+        {isOnline ? (
+          <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+        ) : (
+          <div className="h-2 w-2 bg-gray-500 rounded-full animate-pulse"></div>
+        )}
+       
+                
         </div>
         {/* add a profile picture of client */}
       </div>
@@ -173,7 +200,7 @@ const ChatWindow = ({ userID }) => {
       </div>
 
       {/* Message Input */}
-      <div className="flex p-4 border-t border-gray-200">
+      <div className="flex p-4 border-t border-gray-200 sticky bottom-0 z-10 bg-black">
         <input
           type="text"
           className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
