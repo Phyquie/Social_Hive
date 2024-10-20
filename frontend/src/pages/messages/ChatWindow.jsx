@@ -35,13 +35,15 @@ const ChatWindow = ({ userID }) => {
   }
  // Set up interval to check if user is online every 5 seconds
  useEffect(() => {
+  if (!client||!client._id) return;
+
   const interval = setInterval(() => {
     checkUserOnlineStatus(client._id);
   }, 5000);
 
   // Clean up the interval on component unmount
   return () => clearInterval(interval);
-}, [client._id]); // Ensure the effect runs when user._id changes
+}, [client]); // Ensure the effect runs when user._id changes
 
   // Function to fetch previous messages between userID and client
   const fetchMessages = () => {
@@ -137,7 +139,17 @@ const ChatWindow = ({ userID }) => {
     }
   }, [client]);
 
-  if (!client) return <div>Select a conversation</div>;
+  if (!client) return (
+    <div className="flex flex-col  bg-black shadow-lg items-center justify-center p-4">
+      <div className="flex justify-center items-center h-full">
+        Select a conversation
+      </div>
+      <IoArrowBack 
+        className="w-6 h-6 cursor-pointer fill-white" 
+        onClick={() => navigate("/messages")}
+      />
+    </div>
+  );
 
   return (
     <div className="flex flex-col h-screen bg-black shadow-lg ">
