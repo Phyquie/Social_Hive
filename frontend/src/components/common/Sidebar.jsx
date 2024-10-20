@@ -43,7 +43,8 @@ const Sidebar = () => {
 				<Link to="/" className="justify-center md:justify-start hidden lg:flex">
 					<BeeLogoSvg className="px-2 w-20 h-20 rounded-full fill-white hover:bg-stone-900" />
 				</Link>
-				<ul className="flex flex-row lg:flex-col gap-3 justify-around lg:justify-start w-full grow py-2 border-t lg:border-t-0 border-gray-700 lg:py-0">
+				
+				<ul className="flex flex-row sticky top-0 z-10 bg-black lg:flex-col gap-3 justify-around lg:justify-start w-full grow py-2 border-t lg:border-t-0 border-gray-700 lg:py-0 ">
 					<li className="flex justify-center md:justify-start">
 						<Link
 							to="/"

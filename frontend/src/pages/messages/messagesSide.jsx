@@ -21,9 +21,12 @@ const MessagesPage = () => {
 
   return (
     <>
-      <div className="text-primary text-3xl font-extrabold text-center">All Messages</div>
+      <div className="text-primary text-3xl font-extrabold text-center py-5">All Messages</div>
       {isLoading && (
         <div>
+          <ConversationSkeleton />
+          <ConversationSkeleton />
+          <ConversationSkeleton />
           <ConversationSkeleton />
           <ConversationSkeleton />
           <ConversationSkeleton />

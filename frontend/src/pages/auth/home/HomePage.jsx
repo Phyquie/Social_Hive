@@ -8,9 +8,9 @@ const HomePage = () => {
 
 	return (
 		<>
-			<div className='flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen'>
+			<div className='flex flex-col mr-auto border-r border-gray-700 min-h-screen'>
 				{/* Header */}
-				<div className='flex w-full border-b border-gray-700'>
+				<div className='flex w-full border-b border-gray-700 sticky top-0 z-10 bg-black'>
 					<div
 						className={
 							"flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
@@ -19,7 +19,7 @@ const HomePage = () => {
 					>
 						<h1 className="text-2xl text-primary font-extrabold">For you</h1>
 						{feedType === "forYou" && (
-							<div className='absolute bottom-0 w-10  h-1 rounded-full bg-primary'></div>
+							<div className='absolute bottom-0 w-10  h-1 rounded-full bg-stone-900'></div>
 						)}
 					</div>
 					<div

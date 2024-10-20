@@ -82,7 +82,7 @@ const handleFollow = (userId) => {
   };
 
   return (
-    <div className="search-page flex flex-col  items-center  h-screen py-4 ">
+    <div className="search-page flex flex-col  items-center  h-screen py-4 px-4 ">
       <input
         type="text"
         placeholder="Search Users"
