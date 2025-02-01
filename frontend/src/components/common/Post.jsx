@@ -1,4 +1,6 @@
 import { FaRegComment, FaRegHeart, FaTrash } from "react-icons/fa";
+import { CiBookmark } from "react-icons/ci";
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -14,6 +16,23 @@ const Post = ({ post }) => {
   const [likeCount, setLikeCount] = useState(post.likes.length);
   const [isLikedLocal, setIsLikedLocal] = useState(post.likes.includes(authUser._id));
 
+  // Fetch saved posts
+  const { data: getSavedPosts } = useQuery({
+    queryKey: ["savedPosts"],
+    queryFn: async () => {
+      const res = await fetch("/api/users/getSavedPosts");
+      if (!res.ok) {
+        throw new Error("Failed to fetch saved posts");
+      }
+      return res.json();
+    },
+  });
+
+  // Initialize isSaved based on whether the post is in the savedPosts list
+  const [isSaved, setIsSaved] = useState(() => {
+    return getSavedPosts ? getSavedPosts.posts.some(savedPost => savedPost._id === post._id) : false;
+  });
+
   const postOwner = post.user;
   const isMyPost = authUser._id === post.user._id;
  
@@ -22,6 +41,7 @@ const Post = ({ post }) => {
   const navigate = useNavigate();
   
 
+ 
   const { mutate: Delete } = useMutation({
     mutationFn: async () => {
       try {
@@ -110,6 +130,56 @@ const Post = ({ post }) => {
 			toast.error(error.message);
 		},
 	});
+
+  const { mutate: savePost } = useMutation({
+    mutationFn: async () => {
+      try {
+        if(isSaved){
+          const res = await fetch(`/api/users/deleteSavedPost/${post._id}`, {
+            method:"DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await res.json();
+          if(!res.ok){
+            throw new Error(data.error || "Something went wrong");
+          }
+          return data;
+        }
+        else{
+        const res = await fetch(`/api/users/savePost/${post._id}`, {
+          method:"POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ postId: post._id }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+
+          return data;
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    onSuccess: () => {
+      setIsSaved(!isSaved);
+      toast.success(isSaved ? "Post unsaved successfully" : "Post saved successfully");
+      queryClient.invalidateQueries({ queryKey: ["savedPosts"] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleSavePost = () => {
+    savePost();
+  };
 
   const handleDeletePost = () => {
     Delete();
@@ -237,6 +307,16 @@ const Post = ({ post }) => {
                 )}
                 <span className={`text-sm ${isLikedLocal ? "text-pink-500" : "group-hover:text-pink-500"}`}>
                   {likeCount}
+                </span>
+              </div>
+              <div className="flex gap-2 items-center cursor-pointer group" onClick={handleSavePost}>
+                {isSaved ? (
+                  <CiBookmark className="w-5 h-5 text-sky-400 fill-sky-400" />
+                ) : (
+                  <CiBookmark className="w-5 h-5 group-hover:text-sky-400" />
+                )}
+                <span className={`text-sm ${isSaved ? "text-sky-400" : "group-hover:text-sky-400"}`}>
+                  {isSaved ? "Saved" : "Save"}
                 </span>
               </div>
             </div>

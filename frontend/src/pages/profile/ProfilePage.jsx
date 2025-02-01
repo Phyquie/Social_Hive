@@ -109,6 +109,22 @@ const ProfilePage = () => {
         return <p className="text-center text-lg mt-4">User not found</p>;
     }
 
+    const RequestMeet = async (email,senderEmail) => {
+        console.log("email: ", email);
+        const res = await fetch("/api/users/requestMeet", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email,senderEmail }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.error || "Something went wrong");
+        }
+        toast.success("Email sent successfully");
+    }
+
     return (
         <div className="flex-[4_4_0] border-r border-gray-700 min-h-screen">
             {/* HEADER */}
@@ -174,6 +190,7 @@ const ProfilePage = () => {
                 </div>
                 <div className="flex justify-end px-4 mt-5">
                     {isMyProfile && <EditProfileModal />}
+                    <button className="btn btn-outline rounded-full btn-sm" onClick={() => RequestMeet(user?.email,authUser?.email)}>Request Meet</button>
                     {!isMyProfile && (
                         <button
                             className="btn btn-outline rounded-full btn-sm"

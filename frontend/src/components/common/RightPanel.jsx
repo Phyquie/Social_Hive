@@ -3,10 +3,11 @@ import RightPanelSkeleton from "../skeletons/RightPanelSkeleton";
 import { useQuery ,useMutation ,useQueryClient, QueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "./LoadingSpinner";
 import toast from "react-hot-toast";
-
+import { useState } from "react";
 const RightPanel = () => {
      
 	const queryClient =  useQueryClient();
+	const [loadingUser,setLoadingUser] = useState(false);
 
 	const { data: suggestedUsers, isLoading } = useQuery({
 		queryKey: ["suggestedUsers"],
@@ -52,6 +53,10 @@ const RightPanel = () => {
 			toast.error(error.message);
 		},
 	});
+	const handleFollow = (userId) => {
+		setLoadingUser(userId);
+		follow(userId);
+	};
 
 
 	if (suggestedUsers?.length === 0) return <div className='md:w-64 w-0'></div>;
@@ -96,10 +101,10 @@ const RightPanel = () => {
 										className='btn bg-white text-black hover:bg-white hover:opacity-90 rounded-full btn-sm'
 										onClick={(e) => {
 											e.preventDefault();
-											follow(user._id);
+											handleFollow(user._id);
 										}}
 									>
-										{isPending ? <LoadingSpinner size='sm' /> : "Follow"}
+										{loadingUser === user._id ? <LoadingSpinner size='sm' /> : "Follow"}
 									</button>
 								</div>
 							</Link>

@@ -13,7 +13,10 @@ import LoadingSpinner from './components/common/LoadingSpinner'
 import MessagesPage from './pages/messages/messagesSide'
 import ChatWindow from './pages/messages/ChatWindow'
 import SearchPage from './pages/searchPage/SearchPage'
-
+import AiPage from './pages/AiAssistant/AiPage'
+import ResumeChecker from './pages/Resume/ResumeChecker'
+import SavedPostsPage from './pages/SavePosts/SavePost'
+import VideoCallWindow from './pages/messages/videoCallWindow'
 function App() {
  const{data : authUser,isLoading} =useQuery({
   queryKey:['authUser'],
@@ -36,6 +39,7 @@ function App() {
       
     },
     retry:false,
+    
 
   }
  );
@@ -46,6 +50,8 @@ function App() {
 			</div>
   )
  }
+ 
+
 
   return (
     <><div className="flex h-screen lg:flex-row flex-col-reverse">
@@ -83,8 +89,19 @@ function App() {
       <Route 
            path="/messages/chat"
            element={authUser ? <ChatWindow userID={authUser._id} /> : <Navigate to="/login" />}/>
-           <Route path="/search" element={authUser ? <SearchPage/> : <Navigate to="/login" />}/>
+
+            <Route 
+      path = "/AiChat"
+      element={authUser ? <AiPage userId={authUser._id}/> : <Navigate to="/login" />}/>
+      <Route path="/resumeChecker" element={authUser ? <ResumeChecker/> : <Navigate to="/login" />}/>
+
+      <Route path="/savedPosts" element={authUser ? <SavedPostsPage/> : <Navigate to="/login" />}/>
+      <Route path="/search" element={authUser ? <SearchPage/> : <Navigate to="/login" />}/>
+      <Route path="/videoCall" element={authUser ? <VideoCallWindow userID={authUser._id}/> : <Navigate to="/login" />}/>
+
       </Routes>
+      
+
     </div>
     {authUser && (
       <div className="sticky top-0 right-0 w-1/5 h-full hidden lg:block">

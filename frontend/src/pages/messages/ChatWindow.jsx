@@ -4,6 +4,8 @@ import useConversation from "../../zustand/useConversation.js"
 import CryptoJS from "crypto-js";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { FaVideo } from "react-icons/fa";
+
 
 const ChatWindow = ({ userID }) => {
   const { selectedConversation: client } = useConversation();
@@ -175,6 +177,7 @@ const ChatWindow = ({ userID }) => {
        
                 
         </div>
+        <FaVideo className="w-6 h-6 cursor-pointer fill-secondary ml-auto" onClick={() => navigate("/videoCall")}/> 
         {/* add a profile picture of client */}
       </div>
 
@@ -201,9 +204,7 @@ const ChatWindow = ({ userID }) => {
                   msg.sender.uid === userID ? "top-0 -right-2 w-0 h-0 border-t-8 border-primary border-r-8 border-r-transparent" : "top-0 -left-2 w-0 h-0 border-t-8 border-t-gray-200 border-l-8 border-l-transparent"
                 }`}></div>
                 {/* {add time to the message} */}
-                <div className="absolute bottom-0 right-2 text-[10px]">
-                  {getDateTimeFromTimestamp(msg?.sentAt)}
-                </div>
+                
               </div>
             );
           }
@@ -236,16 +237,4 @@ const ChatWindow = ({ userID }) => {
 
 export default ChatWindow;
 
-// getDate&TimeFromTimestamp in DD/MM, HH:MM
-const getDateTimeFromTimestamp = (timestamp) => {
-  const date = new Date(timestamp);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  // add AM PM to the time
-  const amPm = hours >= 12 ? "PM" : "AM";
-  const hours12 = hours % 12;
-  const formattedTime = `${hours12}:${minutes} ${amPm}`;
-  return `${formattedTime}`;
-}
+

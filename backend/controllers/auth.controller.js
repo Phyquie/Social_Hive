@@ -1,6 +1,41 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie}  from "../lib/utlis/generateToken.js";
+import nodemailer from "nodemailer";
+
+const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+const sendOTPEmail = async (email, otp) => {
+    const transporter = nodemailer.createTransport({
+        host: 'smtp-relay.brevo.com',
+        port: 587,
+        secure: false, 
+        auth: {
+            user: '79ac62002@smtp-brevo.com', 
+            pass: process.env.BREVEO_PASS
+        }
+    });
+
+    const mailOptions = {
+        from: 'Phyquie <ayushking6395@gmail.com>',
+        to: email,
+        subject: 'Your OTP Code for Social Hive',
+        text: `Your OTP code is ${otp}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log('Error sending email:', error);
+        }
+        console.log('Message sent: %s', info.messageId);
+    });
+    
+
+
+};
+
 export const signup = async (req, res) => {
  try{
     const{fullname, username, email, password} = req.body;
@@ -25,27 +60,21 @@ export const signup = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const newUser = new User({
+    
+    const otp = generateOTP();
+    await sendOTPEmail(email, otp);
+
+    const TempUser = new Temp({
         fullname,
         username,
         email,
+        otp,
         password: hashedPassword,
     });
 
-    if(newUser){
-        generateTokenAndSetCookie(newUser._id, res);
-        await newUser.save();
-        res.status(201).json({_id:newUser._id,
-             username:newUser.username, email:newUser.email, 
-            fullname:newUser.fullname,
-            profileImg:newUser.profileImg,
-            coverImg:newUser.coverImg,
-            bio:newUser.bio,
-            link:newUser.link,
-            followers:newUser.followers,
-            following:newUser.following,
-        });
-
+    if(TempUser){
+        await TempUser.save();
+        res.status(201).send({message: "OTP sent to email"});
     }else{
         res.status(500).send({message: "Something went wrong"});
     }

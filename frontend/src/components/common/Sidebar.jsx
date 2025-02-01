@@ -6,6 +6,13 @@ import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
 import { TbMessageFilled } from "react-icons/tb";
 import { FaSearch } from "react-icons/fa";
+import { FaRobot } from "react-icons/fa";
+import { IoDocumentText } from "react-icons/io5";
+import { SiHomeassistantcommunitystore } from "react-icons/si";
+
+
+
+
 
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -90,7 +97,35 @@ const Sidebar = () => {
 							<span className="text-2xl font-extrabold hidden lg:block">Search</span>
 						</Link>
 					</li>
-
+					<li className="flex justify-center md:justify-start">
+						<Link
+							to={`/AiChat`}
+							className="flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
+						>
+							<FaRobot className="w-6 h-6 fill-primary" />
+							<span className="text-2xl font-extrabold hidden lg:block">Ai Assistant</span>
+						</Link>
+					</li>
+					{/* <li className="flex justify-center md:justify-start">
+						<Link
+							to={`/marketplace`}
+							className="flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
+						>
+							<SiHomeassistantcommunitystore className="w-6 h-6 text-primary" />
+							<span className="text-2xl font-extrabold hidden lg:block">Marketplace</span>
+						</Link>
+					</li> */}
+					<li className="flex justify-center md:justify-start">
+						<Link
+							to={`/savedPosts`}
+							className="flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
+						>
+							<IoDocumentText className="w-6 h-6 text-primary" />
+							<span className="text-2xl font-extrabold hidden lg:block">Saved Posts</span>
+						</Link>
+					</li>
+					
+					
 					<li className="flex justify-center">
 						<BiLogOut
 							className="w-6 h-6 cursor-pointer fill-primary my-2 lg:hidden"
